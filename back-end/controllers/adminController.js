@@ -3,7 +3,10 @@ const User = require("../models/user.js");
 const commonFc = require("../ulti.js");
 
 exports.getHome = (req, res, next) => {
-  res.status(200).send(true);
+  User.find().then((r) => {
+    console.log(r);
+    res.status(200).send(r);
+  });
 };
 
 exports.addUser = (req, res, next) => {

@@ -8,6 +8,7 @@ function App() {
   // const inputRef = useRef(null);
 
   useEffect(() => {
+    getListUser();
     document.querySelector(".form-info").addEventListener("submit", (event) => {
       event.preventDefault();
 
@@ -24,6 +25,12 @@ function App() {
       });
     });
   }, []);
+
+  function getListUser() {
+    axiosClient.get("/home").then((r) => {
+      console.log(r);
+    });
+  }
 
   // function addressHandle() {
   //   console.log(inputRef.current.value);
