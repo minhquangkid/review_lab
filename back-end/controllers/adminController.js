@@ -32,6 +32,20 @@ exports.addUser = (req, res, next) => {
     });
 };
 
+exports.editUser = (req, res, next) => {
+  console.log(req.body);
+
+  User.findByIdAndUpdate(req.body._id, {
+    // tìm cách tốt hơn để update nguyên 1 object
+    userName: req.body.userName,
+    age: req.body.age,
+    address: req.body.address,
+  }).then((e) => {
+    console.log(e);
+    res.status(200).send(true);
+  });
+};
+
 exports.deleteUser = (req, res, next) => {
   console.log(req.params);
 

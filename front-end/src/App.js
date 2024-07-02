@@ -4,27 +4,30 @@ import axiosClient from "./axios.service";
 
 function App() {
   const [list, setList] = useState([]);
+  const [currentUser, setCurrentUser] = useState("");
 
-  // const inputRef = useRef(null);
+  const nameRef = useRef(null);
+  const ageRef = useRef(null);
+  const addressRef = useRef(null);
 
   useEffect(() => {
     getListUser();
-    document.querySelector(".form-info").addEventListener("submit", (event) => {
-      event.preventDefault();
+    // document.querySelector(".form-info").addEventListener("submit", (event) => {
+    //   event.preventDefault();
 
-      const data = event.target;
+    //   const data = event.target;
 
-      console.log(data);
+    //   console.log(data);
 
-      const formData = new FormData(data);
+    //   const formData = new FormData(data);
 
-      console.log(formData);
+    //   console.log(formData);
 
-      axiosClient.post("/add-user", formData).then((r) => {
-        console.log(r);
-        getListUser();
-      });
-    });
+    //   axiosClient.post("/add-user", formData).then((r) => {
+    //     console.log(r);
+    //     getListUser();
+    //   });
+    // });
   }, []);
 
   function getListUser() {
@@ -34,14 +37,29 @@ function App() {
     });
   }
 
-  // function addressHandle() {
-  //   console.log(inputRef.current.value);
-  //   axiosClient
-  //     .post("/add-user", { name: inputRef.current.value })
-  //     .then((r) => {
-  //       console.log(r);
-  //     });
-  // }
+  function submitHandle() {
+    const data = {
+      userName: nameRef.current.value,
+      age: ageRef.current.value,
+      address: addressRef.current.value,
+    };
+
+    axiosClient.post("/add-user", data).then((r) => {
+      console.log(r);
+      getListUser();
+    });
+  }
+
+  function updateHandle() {
+    currentUser.userName = nameRef.current.value;
+    currentUser.age = ageRef.current.value;
+    currentUser.address = addressRef.current.value;
+
+    axiosClient.put("/update-user", currentUser).then((r) => {
+      console.log(r);
+      getListUser();
+    });
+  }
 
   function deleteUser(userId) {
     axiosClient.delete(`/delete-user/${userId}`).then((r) => {
@@ -50,6 +68,12 @@ function App() {
         getListUser();
       }
     });
+  }
+  function editUser(user) {
+    nameRef.current.value = user.userName;
+    ageRef.current.value = user.age;
+    addressRef.current.value = user.address;
+    setCurrentUser(user);
   }
 
   const showList = list.map((item) => {
@@ -65,6 +89,13 @@ function App() {
         >
           Delete
         </button>
+        <button
+          onClick={() => {
+            editUser(item);
+          }}
+        >
+          Edit
+        </button>
       </li>
     );
   });
@@ -74,7 +105,7 @@ function App() {
       <div className="container">
         <div className="row">
           <div className="col">
-            <form
+            {/* <form
               action="http://localhost:5000/add-user"
               method="POST"
               className="form-info"
@@ -102,26 +133,41 @@ function App() {
                   Submit
                 </button>
               </div>
-            </form>
+            </form> */}
 
-            {/* <br />
             <div className="form-group">
-              <label htmlFor="yourName">Your address</label>
+              <label htmlFor="yourName">Your Name</label>
               <input
-                className="form-control"
+                className="form-control input-name"
                 type="text"
-                name="yourAddress"
-                
-                ref={inputRef}
+                name="userName"
+                ref={nameRef}
+              />
+              <label htmlFor="address">Your Address</label>
+              <input
+                className="form-control input-name"
+                type="text"
+                name="address"
+                ref={addressRef}
+              />
+              <label htmlFor="age">Your Age</label>
+              <input
+                className="form-control input-name"
+                type="number"
+                name="age"
+                ref={ageRef}
               />
               <button
                 type="submit"
                 className="btn btn-primary"
-                onClick={addressHandle}
+                onClick={submitHandle}
               >
                 Submit
               </button>
-            </div> */}
+              <button className="btn btn-info ml-2" onClick={updateHandle}>
+                Update
+              </button>
+            </div>
           </div>
           <div className="col">
             <ul>{showList}</ul>
