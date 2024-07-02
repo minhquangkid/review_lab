@@ -3,7 +3,7 @@ import "./App.css";
 import axiosClient from "./axios.service";
 
 function App() {
-  const [data, setData] = useState();
+  const [list, setList] = useState([]);
 
   // const inputRef = useRef(null);
 
@@ -22,6 +22,7 @@ function App() {
 
       axiosClient.post("/add-user", formData).then((r) => {
         console.log(r);
+        getListUser();
       });
     });
   }, []);
@@ -29,6 +30,7 @@ function App() {
   function getListUser() {
     axiosClient.get("/home").then((r) => {
       console.log(r);
+      setList(r);
     });
   }
 
@@ -40,6 +42,32 @@ function App() {
   //       console.log(r);
   //     });
   // }
+
+  function deleteUser(userId) {
+    axiosClient.delete(`/delete-user/${userId}`).then((r) => {
+      console.log(r);
+      if (r) {
+        getListUser();
+      }
+    });
+  }
+
+  const showList = list.map((item) => {
+    return (
+      <li key={item._id}>
+        <p>{item.userName}</p>
+        <p>{item.age}</p>
+        <p>{item.address}</p>
+        <button
+          onClick={() => {
+            deleteUser(item._id);
+          }}
+        >
+          Delete
+        </button>
+      </li>
+    );
+  });
 
   return (
     <React.Fragment>
@@ -95,7 +123,9 @@ function App() {
               </button>
             </div> */}
           </div>
-          <div className="col"></div>
+          <div className="col">
+            <ul>{showList}</ul>
+          </div>
         </div>
       </div>
     </React.Fragment>

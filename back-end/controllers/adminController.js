@@ -4,7 +4,6 @@ const commonFc = require("../ulti.js");
 
 exports.getHome = (req, res, next) => {
   User.find().then((r) => {
-    console.log(r);
     res.status(200).send(r);
   });
 };
@@ -31,4 +30,13 @@ exports.addUser = (req, res, next) => {
     .catch((err) => {
       console.log(err);
     });
+};
+
+exports.deleteUser = (req, res, next) => {
+  console.log(req.params);
+
+  User.findByIdAndDelete({ _id: req.params.id }).then((e) => {
+    console.log(e);
+    res.status(200).send(true);
+  });
 };
