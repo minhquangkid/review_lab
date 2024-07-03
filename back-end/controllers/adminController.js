@@ -1,4 +1,5 @@
 const User = require("../models/user.js");
+const Product = require("../models/product.js");
 
 const commonFc = require("../ulti.js");
 
@@ -6,6 +7,29 @@ exports.getHome = (req, res, next) => {
   User.find().then((r) => {
     res.status(200).send(r);
   });
+};
+
+exports.getProducts = (req, res, next) => {
+  Product.find().then((r) => {
+    res.status(200).send(r);
+  });
+};
+
+exports.addProduct = (req, res, next) => {
+  console.log(req.body);
+
+  const newProduct = new Product();
+  newProduct.name = req.body.name;
+  newProduct.price = req.body.price;
+
+  newProduct
+    .save()
+    .then((result) => {
+      res.status(200).send(newProduct);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 exports.addUser = (req, res, next) => {

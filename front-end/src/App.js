@@ -3,7 +3,8 @@ import "./App.css";
 import axiosClient from "./axios.service";
 
 function App() {
-  const [list, setList] = useState([]);
+  const [listUser, setListUser] = useState([]);
+  const [listProduct, setListProduct] = useState([]);
   const [currentUser, setCurrentUser] = useState("");
 
   const nameRef = useRef(null);
@@ -12,28 +13,39 @@ function App() {
 
   useEffect(() => {
     getListUser();
-    // document.querySelector(".form-info").addEventListener("submit", (event) => {
-    //   event.preventDefault();
+    getListProduct();
+    document
+      .querySelector(".form-product")
+      .addEventListener("submit", (event) => {
+        event.preventDefault();
 
-    //   const data = event.target;
+        const data = event.target;
 
-    //   console.log(data);
+        console.log(data);
 
-    //   const formData = new FormData(data);
+        const formData = new FormData(data);
 
-    //   console.log(formData);
+        console.log(formData);
 
-    //   axiosClient.post("/add-user", formData).then((r) => {
-    //     console.log(r);
-    //     getListUser();
-    //   });
-    // });
+        axiosClient.post("/add-product", formData).then((r) => {
+          console.log(r);
+          getListUser();
+          getListProduct();
+        });
+      });
   }, []);
 
   function getListUser() {
     axiosClient.get("/home").then((r) => {
       console.log(r);
-      setList(r);
+      setListUser(r);
+    });
+  }
+
+  function getListProduct() {
+    axiosClient.get("/get-products").then((r) => {
+      console.log(r);
+      setListProduct(r);
     });
   }
 
@@ -76,7 +88,7 @@ function App() {
     setCurrentUser(user);
   }
 
-  const showList = list.map((item) => {
+  const showListUser = listUser.map((item) => {
     return (
       <li key={item._id}>
         <p>{item.userName}</p>
@@ -96,6 +108,16 @@ function App() {
         >
           Edit
         </button>
+      </li>
+    );
+  });
+
+  const showListProduct = listProduct.map((item) => {
+    return (
+      <li key={item._id}>
+        <p>{item.name}</p>
+        <p>{item.price}</p>
+        <button onClick={() => {}}>Buy</button>
       </li>
     );
   });
@@ -168,9 +190,35 @@ function App() {
                 Update
               </button>
             </div>
+            <br />
+            <h1>Add Product</h1>
+            {/* Product */}
+            <form action="/dsfdsfs" method="POST" className="form-product">
+              <div className="form-group">
+                <label htmlFor="name">Product Name</label>
+                <input
+                  className="form-control input-name"
+                  type="text"
+                  name="name"
+                />
+                <label htmlFor="price">Price</label>
+                <input
+                  className="form-control input-name"
+                  type="number"
+                  name="price"
+                />
+
+                <button type="submit" className="btn btn-primary">
+                  Submit
+                </button>
+              </div>
+            </form>
           </div>
           <div className="col">
-            <ul>{showList}</ul>
+            <h1>List User</h1>
+            <ul>{showListUser}</ul>
+            <h1>List Product</h1>
+            <ul>{showListProduct}</ul>
           </div>
         </div>
       </div>
