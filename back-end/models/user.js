@@ -20,7 +20,7 @@ const UserSchema = new Schema({
     {
       productId: {
         type: Schema.Types.ObjectId,
-        ref: "product",
+        ref: "Product", // phải ghi chính xác tên lúc dùng module.exports = mongoose.model("Product", ProductSchema);
         require: true,
       },
       quantity: {

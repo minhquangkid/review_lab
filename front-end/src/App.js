@@ -106,8 +106,12 @@ function App() {
         <p>{item.age}</p>
         <p>{item.address}</p>
         {item.cart.length > 0
-          ? item.cart.map((product) => {
-              return <p>{`Quantity: ${product.quantity}`}</p>;
+          ? item.cart.map((product, index) => {
+              return (
+                <p
+                  key={index}
+                >{`Product name : ${product.productId.name}, Price : ${product.productId.price}, Quantity: ${product.quantity}`}</p>
+              );
             })
           : ""}
 

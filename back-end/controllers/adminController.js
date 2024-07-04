@@ -4,9 +4,13 @@ const Product = require("../models/product.js");
 const commonFc = require("../ulti.js");
 
 exports.getHome = (req, res, next) => {
-  User.find().then((r) => {
-    res.status(200).send(r);
-  });
+  User.find()
+    .populate("cart.productId")
+    // .exec() // dùng hay ko dùng thì kết quả cũng vậy
+    .then((r) => {
+      console.log(r);
+      res.status(200).send(r);
+    });
 };
 
 exports.getProducts = (req, res, next) => {
