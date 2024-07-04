@@ -32,4 +32,18 @@ const UserSchema = new Schema({
   ],
 });
 
+UserSchema.methods.addToCart = function (product) {
+  let indexProduct = this.cart.findIndex((e) => e.productId == product._id);
+
+  if (indexProduct == -1) {
+    this.cart.push({
+      productId: product._id,
+      quantity: 1,
+    });
+  } else {
+    this.cart[indexProduct].quantity++;
+  }
+  this.save();
+};
+
 module.exports = mongoose.model("User", UserSchema);

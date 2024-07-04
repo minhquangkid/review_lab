@@ -16,4 +16,6 @@ router.put("/update-user", homeController.editUser);
 
 router.delete("/delete-user/:id", homeController.deleteUser);
 
+router.post("/buy-product/:userId", homeController.buyProduct);
+
 module.exports = router;

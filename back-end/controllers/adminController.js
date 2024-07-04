@@ -56,6 +56,19 @@ exports.addUser = (req, res, next) => {
     });
 };
 
+exports.buyProduct = (req, res, next) => {
+  console.log(req.body);
+  console.log(req.params.userId);
+
+  User.findById(req.params.userId)
+    .then((user) => {
+      return user.addToCart(req.body);
+    })
+    .then((r) => {
+      res.status(200).send(true);
+    });
+};
+
 exports.editUser = (req, res, next) => {
   console.log(req.body);
 

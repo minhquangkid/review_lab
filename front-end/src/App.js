@@ -88,12 +88,29 @@ function App() {
     setCurrentUser(user);
   }
 
+  function buyHandle(product) {
+    if (!currentUser) {
+      alert("please select 1 user");
+      return;
+    }
+    console.log(product);
+    axiosClient.post(`/buy-product/${currentUser._id}`, product).then((r) => {
+      window.location.reload();
+    });
+  }
+
   const showListUser = listUser.map((item) => {
     return (
       <li key={item._id}>
         <p>{item.userName}</p>
         <p>{item.age}</p>
         <p>{item.address}</p>
+        {item.cart.length > 0
+          ? item.cart.map((product) => {
+              return <p>{`Quantity: ${product.quantity}`}</p>;
+            })
+          : ""}
+
         <button
           onClick={() => {
             deleteUser(item._id);
@@ -117,7 +134,13 @@ function App() {
       <li key={item._id}>
         <p>{item.name}</p>
         <p>{item.price}</p>
-        <button onClick={() => {}}>Buy</button>
+        <button
+          onClick={() => {
+            buyHandle(item);
+          }}
+        >
+          Buy
+        </button>
       </li>
     );
   });
