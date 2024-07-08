@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
 import axiosClient from "./axios.service";
+import axios from "axios";
 
 function App() {
   const [listUser, setListUser] = useState([]);
@@ -11,28 +12,32 @@ function App() {
   const ageRef = useRef(null);
   const addressRef = useRef(null);
 
+  const productNameRef = useRef(null);
+  const productPriceRef = useRef(null);
+  const productImage = useRef(null);
+
   useEffect(() => {
     getListUser();
     getListProduct();
-    document
-      .querySelector(".form-product")
-      .addEventListener("submit", (event) => {
-        event.preventDefault();
+    // document
+    //   .querySelector(".form-product")
+    //   .addEventListener("submit", (event) => {
+    //     event.preventDefault();
 
-        const data = event.target;
+    //     const data = event.target;
 
-        console.log(data);
+    //     console.log(data);
 
-        const formData = new FormData(data);
+    //     const formData = new FormData(data);
 
-        console.log(formData);
+    //     console.log(formData);
 
-        axiosClient.post("/add-product", formData).then((r) => {
-          console.log(r);
-          getListUser();
-          getListProduct();
-        });
-      });
+    //     axiosClient.post("/add-product", formData).then((r) => {
+    //       console.log(r);
+    //       getListUser();
+    //       getListProduct();
+    //     });
+    //   });
   }, []);
 
   function getListUser() {
@@ -71,6 +76,24 @@ function App() {
       console.log(r);
       getListUser();
     });
+  }
+
+  function addProductHandle() {
+    console.log(productImage.current.files[0]);
+    const formData = new FormData();
+    formData.append("image", productImage.current.files[0]);
+    formData.append("name", productNameRef.current.value);
+    formData.append("price", productPriceRef.current.value);
+
+    axios
+      .post("http://localhost:5000/add-product", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+      .then((r) => {
+        console.log(r);
+        getListUser();
+        getListProduct();
+      });
   }
 
   function deleteUser(userId) {
@@ -220,26 +243,41 @@ function App() {
             <br />
             <h1>Add Product</h1>
             {/* Product */}
-            <form action="/dsfdsfs" method="POST" className="form-product">
-              <div className="form-group">
-                <label htmlFor="name">Product Name</label>
-                <input
-                  className="form-control input-name"
-                  type="text"
-                  name="name"
-                />
-                <label htmlFor="price">Price</label>
-                <input
-                  className="form-control input-name"
-                  type="number"
-                  name="price"
-                />
+            {/* <form action="/dsfdsfs" method="POST" className="form-product"> */}
+            <div className="form-group">
+              <label htmlFor="name">Product Name</label>
+              <input
+                className="form-control input-name"
+                type="text"
+                name="name"
+                ref={productNameRef}
+              />
+              <label htmlFor="price">Price</label>
+              <input
+                className="form-control input-name"
+                type="number"
+                name="price"
+                ref={productPriceRef}
+              />
 
-                <button type="submit" className="btn btn-primary">
-                  Submit
-                </button>
-              </div>
-            </form>
+              <label htmlFor="image">Image</label>
+              <input
+                className="form-control input-name"
+                type="file"
+                name="image"
+                accept="image/*"
+                ref={productImage}
+              />
+
+              <button
+                type="submit"
+                className="btn btn-primary"
+                onClick={addProductHandle}
+              >
+                Submit
+              </button>
+            </div>
+            {/* </form> */}
           </div>
           <div className="col">
             <h1>List User</h1>

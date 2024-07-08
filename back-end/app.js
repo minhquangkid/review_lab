@@ -1,6 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
 
 const app = express();
 
@@ -30,6 +33,19 @@ app.use(express.urlencoded({ extended: false }));
 // });
 
 const adminRoute = require("./routes/admin");
+
+const fileStore = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const folderPath = path.join(__dirname, "images");
+    fs.mkdirSync(folderPath, { recursive: true });
+    cb(null, folderPath);
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+
+app.use(multer({ storage: fileStore }).single("image"));
 
 app.use(adminRoute);
 

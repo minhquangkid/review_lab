@@ -21,6 +21,7 @@ exports.getProducts = (req, res, next) => {
 
 exports.addProduct = (req, res, next) => {
   console.log(req.body);
+  console.log(req.file);
 
   const newProduct = new Product();
   newProduct.name = req.body.name;
