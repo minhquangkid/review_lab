@@ -4,10 +4,30 @@ const mongoose = require("mongoose");
 
 const app = express();
 
+// const corsOptions = {
+//   origin: 'http://allowed-origin.com', // là domain của Front-end. Nó chỉ định rằng các request từ domain này được phép truy cập vào tài nguyên của server back-end
+//   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+//   credentials: true, // Để cho phép gửi cookie qua cross-origin từ FE đến BE và ngược lại
+// };
+
+// app.use(cors(corsOptions));
+
 app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// const logger = (req, res, next) => {
+//   console.log("test a middleware");
+//   next();
+// };
+
+// app.use(logger);
+
+// app.use((req, res, next) => { // middleware có thể can thiệp và tạo ra lỗi
+//   const err = new Error("Something went wrong!");
+//   next(err);
+// });
 
 const adminRoute = require("./routes/admin");
 
