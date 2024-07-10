@@ -2,6 +2,7 @@ const User = require("../models/user.js");
 const Product = require("../models/product.js");
 
 const commonFc = require("../ulti.js");
+const io = require("../socket.io.js");
 
 exports.getHome = (req, res, next) => {
   User.find()
@@ -54,6 +55,7 @@ exports.addUser = (req, res, next) => {
   newUser
     .save()
     .then((result) => {
+      io.getIO().emit("posts", "emit from socket");
       res.status(200).send(newUser);
     })
     .catch((err) => {

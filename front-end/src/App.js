@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
 import axiosClient from "./axios.service";
 import axios from "axios";
+import openSocket from "socket.io-client";
 
 function App() {
   const [listUser, setListUser] = useState([]);
@@ -38,6 +39,12 @@ function App() {
     //       getListProduct();
     //     });
     //   });
+
+    // const socket = openSocket("http://localhost:5000");
+
+    // socket.on("posts", (data) => {
+    //   console.log(data);
+    // });
   }, []);
 
   function getListUser() {

@@ -15,7 +15,13 @@ const app = express();
 
 // app.use(cors(corsOptions));
 
-app.use(cors());
+app.use(
+  cors({
+    // origin: "http://localhost:3000/",
+    // methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    // credentials: true,
+  })
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -56,6 +62,12 @@ mongoose
   .connect(MONGODB_URI)
   .then((result) => {
     app.listen(5000);
+    // const server = app.listen(5000);
+    // const io = require("./socket.io").init(server);
+    // io.on("connect", (socket) => {
+    //   console.log("Client connected");
+    //   console.log(socket);
+    // });
   })
   .catch((err) => {
     console.log(err);
