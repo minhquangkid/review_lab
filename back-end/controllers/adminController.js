@@ -9,7 +9,7 @@ exports.getHome = (req, res, next) => {
     .populate("cart.productId")
     // .exec() // dùng hay ko dùng thì kết quả cũng vậy
     .then((r) => {
-      console.log(r);
+      // console.log(r);
       res.status(200).send(r);
     });
 };
@@ -55,7 +55,7 @@ exports.addUser = (req, res, next) => {
   newUser
     .save()
     .then((result) => {
-      io.getIO().emit("posts", "emit from socket");
+      // io.getIO().emit("posts", "emit from socket");
       res.status(200).send(newUser);
     })
     .catch((err) => {

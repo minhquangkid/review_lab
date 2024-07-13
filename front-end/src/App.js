@@ -19,7 +19,7 @@ function App() {
 
   useEffect(() => {
     getListUser();
-    getListProduct();
+    //getListProduct();
     // document
     //   .querySelector(".form-product")
     //   .addEventListener("submit", (event) => {
@@ -46,6 +46,12 @@ function App() {
     //   console.log(data);
     // });
   }, []);
+
+  function login() {
+    axiosClient.post("/login", currentUser).then((r) => {
+      console.log(r);
+    });
+  }
 
   function getListUser() {
     axiosClient.get("/home").then((r) => {
@@ -213,7 +219,15 @@ function App() {
                 </button>
               </div>
             </form> */}
-
+            <div>
+              <button
+                onClick={() => {
+                  login();
+                }}
+              >
+                Get Session
+              </button>
+            </div>
             <div className="form-group">
               <label htmlFor="yourName">Your Name</label>
               <input

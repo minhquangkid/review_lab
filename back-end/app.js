@@ -4,6 +4,11 @@ const mongoose = require("mongoose");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const session = require("express-session");
+const MongoDBStore = require("connect-mongodb-session")(session);
+const adminRoute = require("./routes/admin");
+const authRoute = require("./routes/auth");
+const User = require("./models/user");
 
 const app = express();
 
@@ -17,14 +22,49 @@ const app = express();
 
 app.use(
   cors({
-    // origin: "http://localhost:3000/",
-    // methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    // credentials: true,
+    origin: "http://localhost:3000",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
   })
 );
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+const MONGODB_URI =
+  "mongodb+srv://minhquang:25031998@cluster0.0tlx60u.mongodb.net/review-lab";
+
+const store = MongoDBStore({
+  uri: MONGODB_URI,
+  collection: "sessions",
+});
+
+app.use(
+  session({
+    key: "userId",
+    secret: "123546",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      expires: 1000 * 60 * 60,
+      httpOnly: false,
+    },
+    store: store,
+  })
+);
+
+app.use((req, res, next) => {
+  if (!req.session.user) {
+    return next();
+  }
+
+  User.findById(req.session.user._id)
+    .then((user) => {
+      req.user = user;
+      return next();
+    })
+    .catch((err) => console.log("lỗi tại app.js : ", err));
+});
 
 // const logger = (req, res, next) => {
 //   console.log("test a middleware");
@@ -37,8 +77,6 @@ app.use(express.urlencoded({ extended: false }));
 //   const err = new Error("Something went wrong!");
 //   next(err);
 // });
-
-const adminRoute = require("./routes/admin");
 
 const fileStore = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -55,8 +93,7 @@ app.use(multer({ storage: fileStore }).single("image"));
 
 app.use(adminRoute);
 
-const MONGODB_URI =
-  "mongodb+srv://minhquang:25031998@cluster0.0tlx60u.mongodb.net/review-lab";
+app.use(authRoute);
 
 mongoose
   .connect(MONGODB_URI)
